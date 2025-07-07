@@ -28,6 +28,30 @@ jobs:
       # - name: Setup Helm
       #   uses: azure/setup-helm@v4
 
+      - name: Add bitnami charts with Helm
+        shell: powershell
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+      - name: Deploy mysql with Helm
+        shell: powershell
+        run: |
+          helm upgrade mysql ./k8s-helm/mysql-chart `
+            --install `
+            --namespace my-apps `
+            --create-namespace `
+            --atomic
+      - name: Deploy redis with Helm
+        shell: powershell
+        run: |
+          helm upgrade redis ./k8s-helm/redis-chart `
+                --install `
+                --namespace my-apps `
+                --atomic
+
+      - name: Deploy my services with Helm
+        shell: powershell
+        run: |
       - name: Deploy Service with Helm
         shell: powershell
         run: |
