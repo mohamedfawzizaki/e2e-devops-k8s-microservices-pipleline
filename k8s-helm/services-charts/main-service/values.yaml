@@ -128,13 +128,13 @@ configMap:
     APP_ENV: "production"
     DEBUG: "false"
     # mysql env:
-    MYSQL_HOST: "mysql-release.default.svc.cluster.local"
+    MYSQL_HOST: "mysql.default.svc.cluster.local"
     MYSQL_PORT: "3306"
     MYSQL_USER: "root"
     MYSQL_ROOT_PASSWORD: "root"
     MYSQL_PASSWORD: "root"
     MYSQL_DB: "mysql-db"
-    REDIS_HOST: "redis-release-master.default.svc.cluster.local"
+    REDIS_HOST: "redis-master.default.svc.cluster.local"
     REDIS_PORT: "6379"
     REDIS_PASSWORD: "29112000"
 
