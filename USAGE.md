@@ -1,0 +1,1 @@
+helm install gateway-release .\k8s-helm\gateway-chart\

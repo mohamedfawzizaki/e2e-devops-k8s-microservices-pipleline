@@ -58,3 +58,11 @@ jobs:
             --set "image.repository=docker.io/mohamedfawzi/$SERVICE" `
             --set "image.tag=$TAG" `
             --atomic
+
+      - name: Deploy ingress-gateway with Helm
+        shell: powershell
+        run: |
+          helm upgrade gateway ./k8s-helm/gateway-chart `
+            --install `
+            --namespace default `
+            --atomic
