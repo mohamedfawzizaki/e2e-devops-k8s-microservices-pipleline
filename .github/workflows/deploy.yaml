@@ -15,10 +15,19 @@ jobs:
       - name: Setup kubectl
         uses: azure/setup-kubectl@v4
 
-      - name: Configure kubeconfig (ngrok public API)
+      # - name: Configure kubeconfig (ngrok public API)
+      #   run: |
+      #     echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > kubeconfig
+      #     export KUBECONFIG=$PWD/kubeconfig
+      #     kubectl get nodes
+      - name: Configure kubeconfig (Windows PowerShell)
+        shell: pwsh
         run: |
-          echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > kubeconfig
-          export KUBECONFIG=$PWD/kubeconfig
+          $base64Encoded = @"
+          ***
+          "@
+          [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64Encoded)) | Out-File -FilePath kubeconfig -Encoding ascii
+          $env:KUBECONFIG = "$PWD\kubeconfig"
           kubectl get nodes
 
       - name: Setup Helm
