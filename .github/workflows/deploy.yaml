@@ -25,8 +25,8 @@ jobs:
           $env:KUBECONFIG = "$PWD\kubeconfig"
           kubectl get nodes
 
-      - name: Setup Helm
-        uses: azure/setup-helm@v4
+      # - name: Setup Helm
+      #   uses: azure/setup-helm@v4
 
       - name: Deploy Service with Helm
         shell: powershell
