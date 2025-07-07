@@ -1,13 +1,10 @@
 name: Deploy Microservice to Minikube (via ngrok)
-
 on:
   repository_dispatch:
     types: [deploy-microservice]
-
 jobs:
   deploy:
     runs-on: self-hosted
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,7 +24,6 @@ jobs:
 
       # - name: Setup Helm
       #   uses: azure/setup-helm@v4
-
       - name: Add bitnami charts with Helm
         shell: powershell
         run: |
@@ -38,7 +34,7 @@ jobs:
         run: |
           helm upgrade mysql ./k8s-helm/mysql-chart `
             --install `
-            --namespace my-apps `
+            --namespace default `
             --create-namespace `
             --atomic
       - name: Deploy redis with Helm
@@ -46,13 +42,9 @@ jobs:
         run: |
           helm upgrade redis ./k8s-helm/redis-chart `
                 --install `
-                --namespace my-apps `
+                --namespace default `
                 --atomic
-
-      - name: Deploy my services with Helm
-        shell: powershell
-        run: |
-      - name: Deploy Service with Helm
+      - name: Deploy Services with Helm
         shell: powershell
         run: |
           $SERVICE = "${{ github.event.client_payload.service }}"
@@ -62,8 +54,7 @@ jobs:
 
           helm upgrade $SERVICE ./k8s-helm/services-charts/$SERVICE `
             --install `
-            --namespace my-apps `
-            --create-namespace `
+            --namespace default `
             --set "image.repository=docker.io/mohamedfawzi/$SERVICE" `
             --set "image.tag=$TAG" `
             --atomic
