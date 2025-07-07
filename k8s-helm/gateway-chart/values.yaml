@@ -2,12 +2,12 @@ ingress:
   enabled: true
   className: nginx
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/rewrite-target: /
 
   hosts:
     - host: reactjs.local
       paths:
-        - path: /(.*)
+        - path: /
           pathType: Prefix
           service:
             name: reactjs-service
@@ -15,7 +15,7 @@ ingress:
 
     - host: api.local
       paths:
-        - path: /(.*)
+        - path: /api/
           pathType: Prefix
           service:
             name: main-service
