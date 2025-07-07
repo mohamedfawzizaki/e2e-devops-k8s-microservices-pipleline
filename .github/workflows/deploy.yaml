@@ -15,16 +15,11 @@ jobs:
       - name: Setup kubectl
         uses: azure/setup-kubectl@v4
 
-      # - name: Configure kubeconfig (ngrok public API)
-      #   run: |
-      #     echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > kubeconfig
-      #     export KUBECONFIG=$PWD/kubeconfig
-      #     kubectl get nodes
       - name: Configure kubeconfig (Windows PowerShell)
-        shell: pwsh
+        shell: powershell
         run: |
           $base64Encoded = @"
-          ***
+          ${{ secrets.KUBE_CONFIG_DATA }}
           "@
           [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64Encoded)) | Out-File -FilePath kubeconfig -Encoding ascii
           $env:KUBECONFIG = "$PWD\kubeconfig"
@@ -34,16 +29,17 @@ jobs:
         uses: azure/setup-helm@v4
 
       - name: Deploy Service with Helm
+        shell: powershell
         run: |
-          SERVICE=${{ github.event.client_payload.service }}
-          TAG=${{ github.event.client_payload.tag }}
+          $SERVICE = "${{ github.event.client_payload.service }}"
+          $TAG = "${{ github.event.client_payload.tag }}"
 
-          echo "Deploying service: $SERVICE with image tag: $TAG"
+          Write-Host "Deploying service: $SERVICE with image tag: $TAG"
 
-          helm upgrade ${SERVICE} ./k8s-helm/services-charts/${SERVICE} \
-            --install \
-            --namespace my-apps \
-            --create-namespace \
-            --set image.repository=docker.io/mohamedfawzi/${SERVICE} \
-            --set image.tag=${TAG} \
+          helm upgrade $SERVICE ./k8s-helm/services-charts/$SERVICE `
+            --install `
+            --namespace my-apps `
+            --create-namespace `
+            --set "image.repository=docker.io/mohamedfawzi/$SERVICE" `
+            --set "image.tag=$TAG" `
             --atomic
